@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Đăng Ký Khí Tâm</title>
+    <style>
+        .kt-form-container {
+            font-family: 'Arial', sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .kt-form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .kt-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 30px; /* Pill shape */
+            background-color: #dfd6ca; /* Light beige color from image */
+            color: #5a544d;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .kt-input::placeholder {
+            color: #a39c94;
+        }
+
+        .kt-input:focus {
+            box-shadow: 0 0 0 2px #737a67;
+        }
+
+        .kt-submit-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 30px;
+            background-color: #737a67; /* Olive green color from image */
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .kt-submit-btn:hover {
+            background-color: #5c6252;
+        }
+
+        /* 
+         * Responsive: Xếp dọc lại khi màn hình nhỏ
+         */
+        @media (max-width: 480px) {
+            .kt-form-row {
+                flex-direction: column;
+            }
+        }
+
+        .kt-message {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+            display: none;
+        }
+        .kt-message.success {
+            color: #28a745;
+            display: block;
+        }
+        .kt-message.error {
+            color: #dc3545;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="kt-form-container">
+    <form id="ktRegistrationForm">
+        <!-- Dòng 1: Tên và Họ -->
+        <div class="kt-form-row">
+            <input type="text" id="firstName" class="kt-input" placeholder="Tên của bạn" required>
+            <input type="text" id="lastName" class="kt-input" placeholder="Họ của bạn" required>
+        </div>
+
+        <!-- Lưu ý: Trong ảnh không có trường Số điện thoại, 
+             nhưng API backend yêu cầu (required) phải có sđt. 
+             Tôi đã thêm trường sđt vào dòng này để không bị lỗi. -->
+        <div class="kt-form-row">
+            <input type="tel" id="phone" class="kt-input" placeholder="Số điện thoại của bạn" required>
+        </div>
+
+        <!-- Dòng 2: Email và Nút Đăng ký -->
+        <div class="kt-form-row">
+            <input type="email" id="email" class="kt-input" placeholder="Địa chỉ email của bạn" required>
+            <button type="submit" class="kt-submit-btn" id="submitBtn">Tôi muốn đăng ký</button>
+        </div>
+
+        <div id="formMessage" class="kt-message"></div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('ktRegistrationForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const submitBtn = document.getElementById('submitBtn');
+        const messageEl = document.getElementById('formMessage');
+        
+        // Lấy dữ liệu từ form
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        
+        // Ghép thành Full Name
+        const fullName = `${lastName} ${firstName}`;
+        // Giá trị Task mặc định theo yêu cầu
+        const task = "Chăm sóc bệnh nhân ung thư và gia tăng hệ miễn dịch";
+
+        // Vô hiệu hóa nút trong lúc gửi
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Đang xử lý...';
+        messageEl.className = 'kt-message';
+        messageEl.textContent = '';
+
+        try {
+            // Đổi URL thành URL Server thực tế của bạn nếu chạy trên LearnWorlds (VD: https://api.yourdomain.com/api/customers)
+            const response = await fetch('http://localhost:3333/api/customers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    fullName: fullName,
+                    email: email,
+                    phone: phone,
+                    task: task
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                messageEl.textContent = "Cảm ơn bạn! Đăng ký thành công.";
+                messageEl.classList.add('success');
+                // Xóa form
+                document.getElementById('ktRegistrationForm').reset();
+            } else {
+                messageEl.textContent = result.error || "Có lỗi xảy ra, vui lòng thử lại!";
+                messageEl.classList.add('error');
+            }
+        } catch (error) {
+            console.error('Lỗi khi submit:', error);
+            messageEl.textContent = "Lỗi kết nối tới máy chủ!";
+            messageEl.classList.add('error');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Tôi muốn đăng ký';
+        }
+    });
+</script>
+
+</body>
+</html>

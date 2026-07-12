@@ -1,0 +1,486 @@
+/* LearnWorlds Style CSS */
+:root {
+  --primary-color: #2D3E50;
+  --secondary-color: #00B1B0;
+  --accent-color: #F39C12;
+  --text-dark: #333333;
+  --text-light: #666666;
+  --bg-light: #F8F9FA;
+  --bg-white: #FFFFFF;
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --border-radius: 8px;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: var(--secondary-color);
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #008a89;
+}
+
+/* Utilities */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 24px;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-primary {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #008a89;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  border: 2px solid var(--secondary-color);
+  color: var(--secondary-color);
+  background: transparent;
+}
+
+.btn-outline:hover {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+/* Navbar */
+.navbar {
+  background-color: var(--bg-white);
+  box-shadow: var(--box-shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+}
+
+.navbar-brand {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.nav-links a {
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+.nav-links a:hover {
+  color: var(--secondary-color);
+}
+
+/* Hero Section */
+.hero {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 80px 0;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 20px;
+  max-width: 600px;
+  margin: 0 auto 30px;
+  opacity: 0.9;
+}
+
+/* Course Grid */
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 60px 0;
+}
+
+.course-card {
+  background: var(--bg-white);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+  transition: transform 0.3s ease;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+}
+
+.course-image {
+  height: 200px;
+  background-color: #ddd;
+  background-size: cover;
+  background-position: center;
+}
+
+.course-content {
+  padding: 20px;
+}
+
+.course-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* Course Player */
+.player-layout {
+  display: flex;
+  height: calc(100vh - 70px);
+}
+
+.player-main {
+  flex: 1;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+}
+
+.video-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.player-sidebar {
+  width: 350px;
+  background: var(--bg-white);
+  border-left: 1px solid #eee;
+  overflow-y: auto;
+}
+
+.lesson-item {
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.lesson-item:hover {
+  background: var(--bg-light);
+}
+
+.lesson-item.active {
+  background: var(--secondary-color);
+  color: white;
+}
+
+.lesson-item.completed h4 {
+  opacity: 0.85;
+}
+
+.lesson-item .lesson-type {
+  font-size: 11px;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.lesson-item.active .lesson-type {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.check-icon {
+  color: #7CFC00;
+}
+
+.section-title {
+  padding: 12px 20px;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  background: var(--bg-light);
+  color: var(--text-light);
+  border-bottom: 1px solid #eee;
+}
+
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.back-link {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 12px;
+}
+
+.sidebar-progress {
+  margin-top: 12px;
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+.content-frame {
+  width: min(960px, 100%);
+  height: min(540px, 60vh);
+  border: none;
+  border-radius: var(--border-radius);
+}
+
+.text-content {
+  max-width: 800px;
+  background: white;
+  color: var(--text-dark);
+  padding: 32px;
+  border-radius: var(--border-radius);
+  text-align: left;
+}
+
+.lesson-info {
+  background: var(--bg-white);
+  padding: 20px;
+}
+
+.lesson-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.zoom-prompt {
+  text-align: center;
+  color: white;
+  padding: 40px;
+}
+
+.page-padding {
+  padding: 40px 20px;
+}
+
+.state-message {
+  padding: 20px 0;
+  color: var(--text-light);
+}
+
+.state-message.error {
+  color: #c0392b;
+}
+
+.muted {
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+.panel {
+  background: var(--bg-white);
+  padding: 20px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin-bottom: 30px;
+}
+
+.live-row {
+  margin-top: 15px;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.alert-box {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  padding: 16px;
+  border-radius: var(--border-radius);
+  margin-bottom: 20px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #eee;
+  border-radius: 3px;
+  margin: 15px 0 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--secondary-color);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.course-badge {
+  display: inline-block;
+  background: var(--secondary-color);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.course-badge.light {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.course-meta {
+  color: var(--text-light);
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.course-meta.light {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.course-desc {
+  color: var(--text-light);
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.course-hero {
+  background-size: cover;
+  background-position: center;
+  color: white;
+  padding: 80px 0;
+}
+
+.course-hero h1 {
+  font-size: 42px;
+  margin: 16px 0;
+}
+
+.course-hero-desc {
+  max-width: 700px;
+  font-size: 18px;
+  opacity: 0.9;
+  margin-bottom: 16px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.btn-outline.light {
+  border-color: white;
+  color: white;
+}
+
+.btn-outline.light:hover {
+  background: white;
+  color: var(--primary-color);
+}
+
+.curriculum {
+  margin-top: 24px;
+}
+
+.curriculum-section {
+  background: var(--bg-white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.curriculum-section h3 {
+  padding: 16px 20px;
+  background: var(--bg-light);
+  font-size: 16px;
+}
+
+.curriculum-section ul {
+  list-style: none;
+}
+
+.curriculum-section li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  border-top: 1px solid #eee;
+  font-size: 14px;
+}
+
+.live-page {
+  min-height: calc(100vh - 70px);
+  background: #111;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.live-panel {
+  text-align: center;
+  max-width: 520px;
+}
+
+.live-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.zoom-root {
+  width: 100%;
+  height: calc(100vh - 70px);
+}

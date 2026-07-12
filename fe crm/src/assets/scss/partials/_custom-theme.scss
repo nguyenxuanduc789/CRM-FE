@@ -1,0 +1,224 @@
+// Custom Theme Overrides
+// Thay đổi màu nền và menu tab bên trái
+
+// Thay đổi màu nền chính
+body {
+  background-color: #054a27 !important;
+}
+
+// Thay đổi màu nền của main content area
+.pcoded-main-container {
+  background-color: #054a27 !important;
+}
+
+// Thay đổi màu nền của sidebar menu
+.pcoded-navbar {
+  background: linear-gradient(135deg, #054a27 0%, #0a6b3a 100%) !important;
+  
+  // Logo area
+  .b-brand {
+    .b-bg {
+      background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%) !important;
+      
+      i {
+        color: #054a27 !important;
+      }
+    }
+    
+    .b-title {
+      color: #ffffff !important;
+      font-weight: 600 !important;
+    }
+  }
+  
+  // Menu items
+  .pcoded-item {
+    li {
+      a {
+        color: #e8f5e8 !important;
+        border-left: 3px solid transparent;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1) !important;
+          color: #ffffff !important;
+          border-left-color: #ffffff;
+        }
+        
+        .pcoded-micon {
+          color: #b8d4b8 !important;
+        }
+        
+        .pcoded-mtext {
+          color: #e8f5e8 !important;
+        }
+      }
+      
+      &.active {
+        a {
+          background-color: rgba(255, 255, 255, 0.15) !important;
+          color: #ffffff !important;
+          border-left-color: #ffffff;
+          
+          .pcoded-micon {
+            color: #ffffff !important;
+          }
+          
+          .pcoded-mtext {
+            color: #ffffff !important;
+          }
+        }
+      }
+    }
+  }
+  
+  // Menu groups
+  .pcoded-hasmenu {
+    .pcoded-submenu {
+      background-color: rgba(0, 0, 0, 0.1) !important;
+      
+      li {
+        a {
+          color: #d0e8d0 !important;
+          
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: #ffffff !important;
+          }
+        }
+        
+        &.active {
+          a {
+            background-color: rgba(255, 255, 255, 0.15) !important;
+            color: #ffffff !important;
+          }
+        }
+      }
+    }
+  }
+  
+  // Menu captions
+  .pcoded-badge {
+    background-color: #ffffff !important;
+    color: #054a27 !important;
+  }
+}
+
+// Thay đổi màu nền của header
+.pcoded-header {
+  background: linear-gradient(135deg, #054a27 0%, #0a6b3a 100%) !important;
+  color: #ffffff !important;
+  
+  .m-header {
+    .logo-dark {
+      display: block !important;
+    }
+    
+    .logo-thumb {
+      display: none !important;
+    }
+  }
+  
+  a, .btn, .dropdown-toggle {
+    color: #ffffff !important;
+    
+    &:hover {
+      color: #e8f5e8 !important;
+    }
+  }
+  
+  .input-group {
+    .input-group-text {
+      color: #ffffff !important;
+    }
+  }
+}
+
+// Thay đổi màu nền của main content cards
+.card {
+  background-color: #ffffff !important;
+  border: 1px solid #e0e0e0 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+// Thay đổi màu nền của dashboard
+.dashboard {
+  background-color: #f8f9fa !important;
+}
+
+// Thay đổi màu nền của breadcrumb
+.breadcrumb {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+// Thay đổi màu nền của navbar collapsed state
+.pcoded-navbar.navbar-collapsed {
+  &:hover {
+    .b-brand .b-title {
+      color: #ffffff !important;
+    }
+  }
+}
+
+// Thay đổi màu nền của mobile menu
+@media (max-width: 991px) {
+  .pcoded-navbar {
+    background: linear-gradient(135deg, #054a27 0%, #0a6b3a 100%) !important;
+  }
+}
+
+// Thay đổi màu nền của dropdown menus
+.dropdown-menu {
+  background-color: #ffffff !important;
+  border: 1px solid #e0e0e0 !important;
+  
+  .dropdown-item {
+    color: #054a27 !important;
+    
+    &:hover {
+      background-color: #f8f9fa !important;
+      color: #054a27 !important;
+    }
+  }
+}
+
+// Thay đổi màu nền của buttons
+.btn-primary {
+  background-color: #054a27 !important;
+  border-color: #054a27 !important;
+  
+  &:hover {
+    background-color: #0a6b3a !important;
+    border-color: #0a6b3a !important;
+  }
+}
+
+// Thay đổi màu nền của tabs
+.nav-tabs {
+  .nav-link {
+    color: #054a27 !important;
+    
+    &.active {
+      background-color: #054a27 !important;
+      color: #ffffff !important;
+      border-color: #054a27 !important;
+    }
+  }
+}
+
+// Thay đổi màu nền của pagination
+.pagination {
+  .page-link {
+    color: #054a27 !important;
+    
+    &:hover {
+      background-color: #054a27 !important;
+      color: #ffffff !important;
+    }
+  }
+  
+  .page-item.active .page-link {
+    background-color: #054a27 !important;
+    border-color: #054a27 !important;
+  }
+} 
