@@ -260,6 +260,39 @@ const PortalDataView = () => {
     setCurrentPage(1);
   };
 
+  // Handle status change
+  const handleStatusChange = async (id, source, newStatus) => {
+    setPortalData(prevData => prevData.map(item => {
+      if (item.products && item.products.length > 0) {
+        return { ...item, products: item.products.map(p => (p._id === id && p.source === source) ? { ...p, status: newStatus } : p) };
+      }
+      if (item._id === id && item.source === source) return { ...item, status: newStatus };
+      return item;
+    }));
+    try {
+      await PortalService.updatePortalStatus({ id, source, status: newStatus });
+    } catch (error) {
+      console.error('Lỗi khi cập nhật status:', error);
+      fetchPortalData();
+    }
+  };
+
+  const handleGraduationStatusChange = async (id, source, newGradStatus) => {
+    setPortalData(prevData => prevData.map(item => {
+      if (item.products && item.products.length > 0) {
+        return { ...item, products: item.products.map(p => (p._id === id && p.source === source) ? { ...p, graduationStatus: newGradStatus } : p) };
+      }
+      if (item._id === id && item.source === source) return { ...item, graduationStatus: newGradStatus };
+      return item;
+    }));
+    try {
+      await PortalService.updatePortalStatus({ id, source, graduationStatus: newGradStatus });
+    } catch (error) {
+      console.error('Lỗi khi cập nhật graduation status:', error);
+      fetchPortalData();
+    }
+  };
+
   // Handle search
   const handleSearch = () => {
     setCurrentPage(1); // Reset về trang đầu khi tìm kiếm
@@ -455,9 +488,9 @@ const PortalDataView = () => {
                   <thead className="table-dark">
                     <tr>
                       <th>STT</th>
-                      <th>Tên khách hàng</th>
-                      <th>Email</th>
-                      <th>Số điện thoại</th>
+                      <th>Khách hàng</th>
+                      <th>Trạng thái học</th>
+                      <th>Trạng thái tốt nghiệp</th>
                       <th>Người giới thiệu</th>
                       <th>Tên sản phẩm</th>
                       <th>Số lượng</th>
@@ -467,14 +500,43 @@ const PortalDataView = () => {
                   </thead>
                   <tbody>
                     {filteredData.map((item, index) => {
-                      // Nếu có products array, hiển thị từng product
                       if (item.products && item.products.length > 0) {
                         return item.products.map((product, productIndex) => (
                           <tr key={`${item.contactId}-${product.orderId}-${productIndex}`}>
                             <td>{(currentPage - 1) * pageSize + index + productIndex + 1}</td>
-                            <td>{item.customerName}</td>
-                            <td>{item.email === 'N/A' ? '' : item.email}</td>
-                            <td>{item.phone === 'N/A' ? '' : item.phone}</td>
+                            <td>
+                              <strong>{item.customerName}</strong>
+                              {item.email !== 'N/A' && (
+                                <div><small className="text-muted"><i className="fas fa-envelope me-1"></i>{item.email}</small></div>
+                              )}
+                              {item.phone !== 'N/A' && (
+                                <div><small className="text-muted"><i className="fas fa-phone me-1"></i>{item.phone}</small></div>
+                              )}
+                            </td>
+                            <td>
+                              <Form.Select
+                                size="sm"
+                                value={product.status || 'Pending'}
+                                onChange={(e) => handleStatusChange(product._id, product.source, e.target.value)}
+                                style={{ width: '130px' }}
+                              >
+                                <option value="Pending">Chờ học</option>
+                                <option value="Enrolled">Đã enroll</option>
+                                <option value="Not Enrolled">Chưa enroll</option>
+                              </Form.Select>
+                            </td>
+                            <td>
+                              <Form.Select
+                                size="sm"
+                                value={product.graduationStatus || 'Chưa tốt nghiệp'}
+                                onChange={(e) => handleGraduationStatusChange(product._id, product.source, e.target.value)}
+                                style={{ width: '150px' }}
+                              >
+                                <option value="Chưa tốt nghiệp">Chưa tốt nghiệp</option>
+                                <option value="Đã tốt nghiệp">Đã tốt nghiệp</option>
+                                <option value="Đang bảo lưu">Đang bảo lưu</option>
+                              </Form.Select>
+                            </td>
                             <td>{item.nguoiGT === 'N/A' ? '' : item.nguoiGT}</td>
                             <td>
                               <strong>{product.productName}</strong>
@@ -491,13 +553,42 @@ const PortalDataView = () => {
                           </tr>
                         ));
                       } else {
-                        // Nếu không có products array, hiển thị như cũ
                         return (
                           <tr key={`${item.contactId}-${item.orderId}-${index}`}>
                             <td>{(currentPage - 1) * pageSize + index + 1}</td>
-                            <td>{item.customerName}</td>
-                            <td>{item.email === 'N/A' ? '' : item.email}</td>
-                            <td>{item.phone === 'N/A' ? '' : item.phone}</td>
+                            <td>
+                              <strong>{item.customerName}</strong>
+                              {item.email !== 'N/A' && (
+                                <div><small className="text-muted"><i className="fas fa-envelope me-1"></i>{item.email}</small></div>
+                              )}
+                              {item.phone !== 'N/A' && (
+                                <div><small className="text-muted"><i className="fas fa-phone me-1"></i>{item.phone}</small></div>
+                              )}
+                            </td>
+                            <td>
+                              <Form.Select
+                                size="sm"
+                                value={item.status || 'Pending'}
+                                onChange={(e) => handleStatusChange(item._id, item.source, e.target.value)}
+                                style={{ width: '130px' }}
+                              >
+                                <option value="Pending">Chờ học</option>
+                                <option value="Enrolled">Đã enroll</option>
+                                <option value="Not Enrolled">Chưa enroll</option>
+                              </Form.Select>
+                            </td>
+                            <td>
+                              <Form.Select
+                                size="sm"
+                                value={item.graduationStatus || 'Chưa tốt nghiệp'}
+                                onChange={(e) => handleGraduationStatusChange(item._id, item.source, e.target.value)}
+                                style={{ width: '150px' }}
+                              >
+                                <option value="Chưa tốt nghiệp">Chưa tốt nghiệp</option>
+                                <option value="Đã tốt nghiệp">Đã tốt nghiệp</option>
+                                <option value="Đang bảo lưu">Đang bảo lưu</option>
+                              </Form.Select>
+                            </td>
                             <td>{item.nguoiGT === 'N/A' ? '' : item.nguoiGT}</td>
                             <td>
                               <strong>{item.productName}</strong>

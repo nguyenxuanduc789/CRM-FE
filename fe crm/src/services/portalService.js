@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_BASE_URL = 'https://www.system.crmkhitam.com/api/v1';
+const API_BASE_URL = "https://www.system.crmkhitam.com/api/v1";
 
 class PortalService {
   // Lấy dữ liệu portal theo ngày contact
@@ -11,7 +11,7 @@ class PortalService {
         startDate: params.startDate,
         endDate: params.endDate,
         page: params.page || 1,
-        limit: params.limit || 20
+        limit: params.limit || 20,
       };
 
       // Thêm source parameter nếu có
@@ -24,9 +24,12 @@ class PortalService {
         requestParams.search = params.search;
       }
 
-      const response = await axios.get(`${API_BASE_URL}/portal/portals-by-contact-date`, {
-        params: requestParams
-      });
+      const response = await axios.get(
+        `${API_BASE_URL}/portal/portals-by-contact-date`,
+        {
+          params: requestParams,
+        },
+      );
       return response.data;
     } catch (error) {
       throw error;
@@ -41,7 +44,7 @@ class PortalService {
         startDate: params.startDate,
         endDate: params.endDate,
         page: 1,
-        limit: 1000 // Lấy tất cả để thống kê
+        limit: 1000, // Lấy tất cả để thống kê
       };
 
       // Thêm search parameter nếu có
@@ -49,9 +52,12 @@ class PortalService {
         requestParams.search = params.search;
       }
 
-      const response = await axios.get(`${API_BASE_URL}/portal/portals-by-contact-date`, {
-        params: requestParams
-      });
+      const response = await axios.get(
+        `${API_BASE_URL}/portal/portals-by-contact-date`,
+        {
+          params: requestParams,
+        },
+      );
 
       const data = response.data.data || [];
 
@@ -66,18 +72,18 @@ class PortalService {
           // Nếu có products array
           item.products.forEach((product) => {
             totalCount++;
-            if (product.source === 'HubPortal') {
+            if (product.source === "HubPortal") {
               hubPortalCount++;
-            } else if (product.source === 'AcademyPortal') {
+            } else if (product.source === "AcademyPortal") {
               academyPortalCount++;
             }
           });
         } else {
           // Nếu không có products array
           totalCount++;
-          if (item.source === 'HubPortal') {
+          if (item.source === "HubPortal") {
             hubPortalCount++;
-          } else if (item.source === 'AcademyPortal') {
+          } else if (item.source === "AcademyPortal") {
             academyPortalCount++;
           }
         }
@@ -87,10 +93,19 @@ class PortalService {
         total: totalCount,
         hubPortal: hubPortalCount,
         academyPortal: academyPortalCount,
-        totalRevenue: totalRevenue
+        totalRevenue: totalRevenue,
       };
 
       return stats;
+    } catch (error) {
+      throw error;
+    }
+  }
+  // Cập nhật trạng thái portal
+  static async updatePortalStatus({ id, source, status, graduationStatus }) {
+    try {
+      const response = await axios.patch(`${API_BASE_URL}/portal/portal-status`, { id, source, status, graduationStatus });
+      return response.data;
     } catch (error) {
       throw error;
     }
