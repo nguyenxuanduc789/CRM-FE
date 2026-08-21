@@ -70,6 +70,10 @@ const PortalDataView = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [searchTerm, setSearchTerm] = useState('');
+  const [productSearch, setProductSearch] = useState('');
+  const [kMin, setKMin] = useState('');
+  const [kMax, setKMax] = useState('');
+  const [kAll, setKAll] = useState(true);
 
   // Format date to YYYY-MM-DD
   const formatDateToYYYYMMDD = (date) => {
@@ -311,7 +315,56 @@ const PortalDataView = () => {
     }
   };
 
-  const filteredData = getFilteredData();
+  // Lấy số K từ orderId (VD: "K8" → 8)
+  const extractKNumber = (orderId) => {
+    if (!orderId || orderId === 'N/A') return null;
+    const match = String(orderId).match(/K(\d+)/i);
+    return match ? parseInt(match[1], 10) : null;
+  };
+
+  const applyProductAndKFilter = (data) => {
+    let result = data;
+    if (productSearch.trim()) {
+      const keyword = productSearch.trim().toLowerCase();
+      result = result.map(item => {
+        if (item.products && item.products.length > 0) {
+          const matchedProducts = item.products.filter(p =>
+            (p.productName || '').toLowerCase().includes(keyword) ||
+            (p.orderId || '').toLowerCase().includes(keyword)
+          );
+          if (matchedProducts.length === 0) return null;
+          return { ...item, products: matchedProducts };
+        }
+        if ((item.productName || '').toLowerCase().includes(keyword) || (item.orderId || '').toLowerCase().includes(keyword)) return item;
+        return null;
+      }).filter(Boolean);
+    }
+    if (!kAll) {
+      const minK = kMin !== '' ? Number(kMin) : null;
+      const maxK = kMax !== '' ? Number(kMax) : null;
+      result = result.map(item => {
+        if (item.products && item.products.length > 0) {
+          const matchedProducts = item.products.filter(p => {
+            const kNum = extractKNumber(p.orderId);
+            if (kNum === null) return false;
+            if (minK !== null && kNum < minK) return false;
+            if (maxK !== null && kNum > maxK) return false;
+            return true;
+          });
+          if (matchedProducts.length === 0) return null;
+          return { ...item, products: matchedProducts };
+        }
+        const kNum = extractKNumber(item.orderId);
+        if (kNum === null) return false;
+        if (minK !== null && kNum < minK) return false;
+        if (maxK !== null && kNum > maxK) return false;
+        return item;
+      }).filter(Boolean);
+    }
+    return result;
+  };
+
+  const filteredData = applyProductAndKFilter(getFilteredData());
 
   return (
     <div className="portal-data-view">
@@ -406,6 +459,56 @@ const PortalDataView = () => {
                   <small className="text-muted">
                     Tổng: {portalData.length} bản ghi
                   </small>
+                </div>
+              </Form.Group>
+            </Col>
+          </Row>
+
+          {/* Lọc sản phẩm & Khoá (K) */}
+          <Row className="mb-4">
+            <Col md={3}>
+              <Form.Group>
+                <Form.Label>Tìm kiếm khóa học:</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Nhập tên SP hoặc mã order..."
+                  value={productSearch}
+                  onChange={(e) => setProductSearch(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>Lọc theo khoảng K:</Form.Label>
+                <div className="d-flex align-items-center gap-2">
+                  <Form.Check 
+                    type="checkbox"
+                    label="Tất cả K"
+                    checked={kAll}
+                    onChange={(e) => {
+                      setKAll(e.target.checked);
+                      if (e.target.checked) {
+                        setKMin('');
+                        setKMax('');
+                      }
+                    }}
+                    style={{ minWidth: '100px' }}
+                  />
+                  <Form.Control
+                    type="number"
+                    placeholder="K Từ..."
+                    value={kMin}
+                    onChange={(e) => { setKMin(e.target.value); setKAll(false); }}
+                    disabled={kAll}
+                  />
+                  <span>-</span>
+                  <Form.Control
+                    type="number"
+                    placeholder="Đến K..."
+                    value={kMax}
+                    onChange={(e) => { setKMax(e.target.value); setKAll(false); }}
+                    disabled={kAll}
+                  />
                 </div>
               </Form.Group>
             </Col>
