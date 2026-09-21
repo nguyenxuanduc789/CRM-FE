@@ -1084,6 +1084,7 @@ const ReportStudent = () => {
         totalAmount: p.totalAmount?.toLocaleString("vi-VN") || "0",
         status: p.status,
         paymentType: p.PaymentType,
+        createdAt: p.createdAt,
       })),
     );
     setShowModal(true);
