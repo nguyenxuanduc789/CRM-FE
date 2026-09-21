@@ -1666,6 +1666,7 @@ const ReportStudent = () => {
                           "Trạng Thái",
                           "Thanh Toán",
                           "Tổng Tiền",
+                          "Ngày Tạo",
                         ].map((h) => (
                           <th key={h} style={S.th}>
                             {h}
