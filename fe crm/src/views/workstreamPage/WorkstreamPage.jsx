@@ -21,6 +21,7 @@ import {
 import { FaThumbsUp, FaShoppingCart } from "react-icons/fa";
 
 import Dashboard from "./Dashboard";
+import RishikeshFormsTab from "./RishikeshFormsTab";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { getDashboardTranslations } from "./translations";
 
