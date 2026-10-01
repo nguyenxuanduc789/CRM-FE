@@ -32,11 +32,14 @@ const ReportPineline = ({ orders, loading, statusFilter }) => {
   const [note, setNote] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sortOrder, setSortOrder] = useState("newest"); // 'newest' | 'oldest'
-  
+
   // Custom state for all installments
   const [allInstallments, setAllInstallments] = useState([]);
   const [loadingInstallments, setLoadingInstallments] = useState(false);
   const [fetchedAllInstallments, setFetchedAllInstallments] = useState(false);
+  const [allPendings, setAllPendings] = useState([]);
+  const [loadingPendings, setLoadingPendings] = useState(false);
+  const [fetchedAllPendings, setFetchedAllPendings] = useState(false);
 
   React.useEffect(() => {
     if (activeTable === "installment" && !fetchedAllInstallments) {
@@ -49,7 +52,9 @@ const ReportPineline = ({ orders, loading, statusFilter }) => {
           const url = `https://www.system.crmkhitam.com/api/v1/pineline/getpinelinerole?user_id=${userId}&start_date=2000-01-01T00:00:00.000Z&end_date=2100-01-01T00:00:00.000Z`;
           const response = await fetch(url);
           const data = await response.json();
-          const inst = (data.pipelines || []).filter(o => o.status === "Installment");
+          const inst = (data.pipelines || []).filter(
+            (o) => o.status === "Installment",
+          );
           setAllInstallments(inst);
           setFetchedAllInstallments(true);
         } catch (error) {
@@ -61,6 +66,32 @@ const ReportPineline = ({ orders, loading, statusFilter }) => {
       fetchAll();
     }
   }, [activeTable, fetchedAllInstallments]);
+
+
+  React.useEffect(() => {
+    if (activeTable === "paid" && !fetchedAllPendings) {
+      const fetchAll = async () => {
+        setLoadingPendings(true);
+        try {
+          const userId = localStorage.getItem("userId");
+          if (!userId) return;
+          const url = `https://www.system.crmkhitam.com/api/v1/pineline/getpinelinerole?user_id=${userId}&start_date=2000-01-01T00:00:00.000Z&end_date=2100-01-01T00:00:00.000Z`;
+          const response = await fetch(url);
+          const data = await response.json();
+          const pends = (data.pipelines || []).filter(
+            (o) => o.status === "Pending",
+          );
+          setAllPendings(pends);
+          setFetchedAllPendings(true);
+        } catch (error) {
+          console.error("Error fetching all pendings", error);
+        } finally {
+          setLoadingPendings(false);
+        }
+      };
+      fetchAll();
+    }
+  }, [activeTable, fetchedAllPendings]);
 
   React.useEffect(() => {
     if (statusFilter === "completed") setActiveTable("installments");
@@ -101,7 +132,18 @@ const ReportPineline = ({ orders, loading, statusFilter }) => {
 
   const getStatusOrders = (status) => {
     if (status === "Installment") {
-      return filterOrders(fetchedAllInstallments ? allInstallments : orders.filter((o) => o.status === status));
+      return filterOrders(
+        fetchedAllInstallments
+          ? allInstallments
+          : orders.filter((o) => o.status === status),
+      );
+    }
+    if (status === "Pending") {
+      return filterOrders(
+        fetchedAllPendings
+          ? allPendings
+          : orders.filter((o) => o.status === status),
+      );
     }
     return filterOrders(orders.filter((o) => o.status === status));
   };
@@ -125,7 +167,15 @@ const ReportPineline = ({ orders, loading, statusFilter }) => {
         0,
       ),
     };
-  }, [orders, categoryFilter, creatorFilter, fetchedAllInstallments, allInstallments]);
+  }, [
+    orders,
+    categoryFilter,
+    creatorFilter,
+    fetchedAllInstallments,
+    allInstallments,
+    fetchedAllPendings,
+    allPendings,
+  ]);
 
   const getCurrentTotal = () => {
     switch (activeTable) {
@@ -516,7 +566,8 @@ const ReportPineline = ({ orders, loading, statusFilter }) => {
             </Card.Header>
 
             <Card.Body style={{ padding: "0" }}>
-              {loading || (activeTable === "installment" && loadingInstallments) ? (
+              {loading ||
+              (activeTable === "installment" && loadingInstallments) || (activeTable === "paid" && loadingPendings) ? (
                 <div style={{ textAlign: "center", padding: "40px" }}>
                   <Spinner animation="border" variant="primary" />
                 </div>
