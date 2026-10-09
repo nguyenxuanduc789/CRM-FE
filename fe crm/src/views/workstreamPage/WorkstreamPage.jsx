@@ -22,6 +22,7 @@ import { FaThumbsUp, FaShoppingCart } from "react-icons/fa";
 
 import Dashboard from "./Dashboard";
 import RishikeshFormsTab from "./RishikeshFormsTab";
+import AffiliateLeadsTable from "../dashboard/AffiliateLeadsTable";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { getDashboardTranslations } from "./translations";
 
@@ -91,7 +92,7 @@ const WorkstreamPage = () => {
     try {
       // Gửi bình luận đến API
       const response = await axios.post(
-        "https://www.system.crmkhitam.com/api/workstreams/comment",
+        "http://localhost:3056/api/workstreams/comment",
         {
           postId: selectedPost._id, // ID của bài viết
           userId: userId, // ID của người dùng hiện tại
@@ -218,7 +219,7 @@ const WorkstreamPage = () => {
 
       // Gửi yêu cầu like đến API
       const response = await axios.post(
-        "https://www.system.crmkhitam.com/api/workstreams/like",
+        "http://localhost:3056/api/workstreams/like",
         {
           workstreamId: postId,
           userId: userId,
@@ -250,9 +251,7 @@ const WorkstreamPage = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await fetch(
-        "https://www.system.crmkhitam.com/api/workstreams",
-      ); // Thay bằng URL API của bạn
+      const response = await fetch("http://localhost:3056/api/workstreams"); // Thay bằng URL API của bạn
       const data = await response.json();
 
       if (response.ok) {
@@ -305,13 +304,10 @@ const WorkstreamPage = () => {
       }
 
       // Gửi API POST
-      const response = await fetch(
-        "https://www.system.crmkhitam.com/api/workstreams",
-        {
-          method: "POST",
-          body: formData,
-        },
-      );
+      const response = await fetch("http://localhost:3056/api/workstreams", {
+        method: "POST",
+        body: formData,
+      });
 
       const data = await response.json();
       console.log(data);
