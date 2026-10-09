@@ -699,11 +699,7 @@ const WorkstreamPage = () => {
                                       </Table>
                                     </Tab.Pane>
                                   ))}
-                                  <Tab.Pane eventKey="affiliateLeads">
-                      <div className="mt-3">
-                        <AffiliateLeadsTable />
-                      </div>
-                    </Tab.Pane>
+                                  
                   </Tab.Content>
                               </Tab.Container>
                             </Card.Body>
@@ -1229,8 +1225,15 @@ const WorkstreamPage = () => {
                     </Tab.Pane>
                     {/* Tab Rishikesh */}
                     <Tab.Pane eventKey="rishikesh">
-                      <RishikeshFormsTab />
-                    </Tab.Pane>
+                        <RishikeshFormsTab />
+                      </Tab.Pane>
+                      {/* Tab Affiliate Leads */}
+                      <Tab.Pane eventKey="affiliateLeads">
+                        <div className="mt-3">
+                          <AffiliateLeadsTable />
+                        </div>
+                      </Tab.Pane>
+
                   </Tab.Content>
                 </Tab.Container>
               </Col>
