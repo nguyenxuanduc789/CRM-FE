@@ -1,7 +1,7 @@
 ﻿import React, { useEffect, useState } from "react";
 import { Card, Table } from "react-bootstrap";
 import axios from "axios";
-import { API_URL } from "../../config/constant";
+
 
 const AffiliateLeadsTable = () => {
   const [leads, setLeads] = useState([]);
@@ -9,7 +9,7 @@ const AffiliateLeadsTable = () => {
   useEffect(() => {
     const fetchLeads = async () => {
       try {
-        const response = await axios.get(`${API_URL}/affiliate-leads`);
+        const response = await axios.get(`https://www.system.crmkhitam.com/api/v1/affiliate-leads`);
         if (response.data.success) {
           setLeads(response.data.leads);
         }
