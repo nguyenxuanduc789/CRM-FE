@@ -470,6 +470,9 @@ const WorkstreamPage = () => {
                         Form thu thập thông tin
                       </Nav.Link>
                     </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link eventKey="affiliateLeads">Khách hàng Đắc Sư</Nav.Link>
+                    </Nav.Item>
                   </Nav>
 
                   <Tab.Content>
@@ -696,7 +699,12 @@ const WorkstreamPage = () => {
                                       </Table>
                                     </Tab.Pane>
                                   ))}
-                                </Tab.Content>
+                                  <Tab.Pane eventKey="affiliateLeads">
+                      <div className="mt-3">
+                        <AffiliateLeadsTable />
+                      </div>
+                    </Tab.Pane>
+                  </Tab.Content>
                               </Tab.Container>
                             </Card.Body>
                           </Card>
