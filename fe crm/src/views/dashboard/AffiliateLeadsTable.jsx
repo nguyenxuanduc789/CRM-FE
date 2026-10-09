@@ -9,7 +9,7 @@ const AffiliateLeadsTable = () => {
   useEffect(() => {
     const fetchLeads = async () => {
       try {
-        const response = await axios.get(`https://www.system.crmkhitam.com/api/v1/affiliate-leads`);
+        const response = await axios.get(`http://localhost:3056/api/v1/affiliate-leads`);
         if (response.data.success) {
           setLeads(response.data.leads);
         }
