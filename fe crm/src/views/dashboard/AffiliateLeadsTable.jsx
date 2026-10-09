@@ -10,6 +10,7 @@ const AffiliateLeadsTable = () => {
     const fetchLeads = async () => {
       try {
         const response = await axios.get(`http://localhost:3056/api/v1/affiliate-leads`);
+        console.log("Fetched leads:", response.data);
         if (response.data.success) {
           setLeads(response.data.leads);
         }
@@ -52,7 +53,7 @@ const AffiliateLeadsTable = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="text-center">
+                <td colSpan="6" className="text-center">
                   Chưa có dữ liệu khách hàng
                 </td>
               </tr>
