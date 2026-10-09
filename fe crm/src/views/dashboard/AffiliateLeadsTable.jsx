@@ -33,7 +33,8 @@ const AffiliateLeadsTable = () => {
               <th>Họ tên</th>
               <th>Email</th>
               <th>Số điện thoại</th>
-              <th>Mã CTV (Affiliate)</th>
+              <th>Mã CTV</th>
+              <th>Tên CTV</th>
               <th>Ngày đăng ký</th>
             </tr>
           </thead>
@@ -45,6 +46,7 @@ const AffiliateLeadsTable = () => {
                   <td>{lead.email}</td>
                   <td>{lead.phone || "-"}</td>
                   <td>{lead.affiliateCode}</td>
+                  <td>{lead.affiliateName || "-"}</td>
                   <td>{new Date(lead.createdAt).toLocaleString("vi-VN")}</td>
                 </tr>
               ))
