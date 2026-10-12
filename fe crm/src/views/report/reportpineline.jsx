@@ -18,6 +18,7 @@ import {
   FaSort,
   FaSortUp,
   FaSortDown,
+  FaUpload,
 } from "react-icons/fa";
 
 const fmtNum = (v) => (v || 0).toLocaleString("vi-VN");
@@ -49,7 +50,7 @@ const ReportPineline = ({ orders, loading, statusFilter }) => {
           const userId = localStorage.getItem("userId");
           if (!userId) return;
           // pass a very wide date range to get all time
-          const url = `https://www.system.crmkhitam.com/api/v1/pineline/getpinelinerole?user_id=${userId}&start_date=2000-01-01T00:00:00.000Z&end_date=2100-01-01T00:00:00.000Z`;
+          const url = `http://localhost:3056/api/v1/pineline/getpinelinerole?user_id=${userId}&start_date=2000-01-01T00:00:00.000Z&end_date=2100-01-01T00:00:00.000Z`;
           const response = await fetch(url);
           const data = await response.json();
           const inst = (data.pipelines || []).filter(
@@ -67,7 +68,6 @@ const ReportPineline = ({ orders, loading, statusFilter }) => {
     }
   }, [activeTable, fetchedAllInstallments]);
 
-
   React.useEffect(() => {
     if (activeTable === "paid" && !fetchedAllPendings) {
       const fetchAll = async () => {
@@ -75,7 +75,7 @@ const ReportPineline = ({ orders, loading, statusFilter }) => {
         try {
           const userId = localStorage.getItem("userId");
           if (!userId) return;
-          const url = `https://www.system.crmkhitam.com/api/v1/pineline/getpinelinerole?user_id=${userId}&start_date=2000-01-01T00:00:00.000Z&end_date=2100-01-01T00:00:00.000Z`;
+          const url = `http://localhost:3056/api/v1/pineline/getpinelinerole?user_id=${userId}&start_date=2000-01-01T00:00:00.000Z&end_date=2100-01-01T00:00:00.000Z`;
           const response = await fetch(url);
           const data = await response.json();
           const pends = (data.pipelines || []).filter(
@@ -220,7 +220,7 @@ const ReportPineline = ({ orders, loading, statusFilter }) => {
         return;
       }
       const response = await axios.post(
-        "https://www.system.crmkhitam.com/api/v1/pineline/add-note",
+        "http://localhost:3056/api/v1/pineline/add-note",
         {
           orderCode: activeOrder.orderCode,
           content: note,
@@ -248,6 +248,35 @@ const ReportPineline = ({ orders, loading, statusFilter }) => {
       alert("Lỗi khi thêm ghi chú.");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const [uploadingId, setUploadingId] = useState(null);
+
+  const handleUploadPaymentBill = async (orderId, file) => {
+    if (!file) return;
+    setUploadingId(orderId);
+    try {
+      const fd = new FormData();
+      fd.append("image", file);
+      const res = await axios.put(`http://localhost:3056/api/v1/pineline/${orderId}/upload`, fd, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      alert(res.data.message || "Tải ảnh thanh toán thành công!");
+      // Cập nhật lại danh sách ảnh trên client
+      const uploadedImg = res.data.image || { url: res.data.imageUrl || "" };
+      setAllInstallments((prev) =>
+        prev.map((o) =>
+          o._id === orderId
+            ? { ...o, images: [...(o.images || []), uploadedImg] }
+            : o,
+        ),
+      );
+    } catch (err) {
+      console.error("Lỗi khi tải ảnh thanh toán:", err);
+      alert("Lỗi tải ảnh thanh toán, vui lòng thử lại!");
+    } finally {
+      setUploadingId(null);
     }
   };
 
@@ -567,7 +596,8 @@ const ReportPineline = ({ orders, loading, statusFilter }) => {
 
             <Card.Body style={{ padding: "0" }}>
               {loading ||
-              (activeTable === "installment" && loadingInstallments) || (activeTable === "paid" && loadingPendings) ? (
+              (activeTable === "installment" && loadingInstallments) ||
+              (activeTable === "paid" && loadingPendings) ? (
                 <div style={{ textAlign: "center", padding: "40px" }}>
                   <Spinner animation="border" variant="primary" />
                 </div>
@@ -856,7 +886,7 @@ const ReportPineline = ({ orders, loading, statusFilter }) => {
                                           onClick={(e) => {
                                             e.stopPropagation();
                                             window.open(
-                                              `https://www.system.crmkhitam.com${img.url}`,
+                                              `http://localhost:3056${img.url}`,
                                               "_blank",
                                             );
                                           }}
@@ -1254,14 +1284,63 @@ const ReportPineline = ({ orders, loading, statusFilter }) => {
                                                             ĐÃ THU
                                                           </span>
                                                         ) : (
-                                                          <span
+                                                          <div
                                                             style={{
-                                                              color: "#856404",
-                                                              fontWeight: "700",
+                                                              display: "inline-flex",
+                                                              alignItems: "center",
+                                                              gap: "6px",
+                                                              justifyContent: "flex-end",
                                                             }}
                                                           >
-                                                            CHƯA THU
-                                                          </span>
+                                                            <span
+                                                              style={{
+                                                                color: "#856404",
+                                                                fontWeight: "700",
+                                                              }}
+                                                            >
+                                                              CHƯA THU
+                                                            </span>
+                                                            <input
+                                                              type="file"
+                                                              id={`upload-inst-${order._id}-${inst.installmentNumber || idx}`}
+                                                              accept="image/*"
+                                                              style={{ display: "none" }}
+                                                              onChange={(e) => {
+                                                                if (e.target.files && e.target.files[0]) {
+                                                                  handleUploadPaymentBill(order._id, e.target.files[0]);
+                                                                }
+                                                              }}
+                                                            />
+                                                            <button
+                                                              type="button"
+                                                              onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                const el = document.getElementById(
+                                                                  `upload-inst-${order._id}-${inst.installmentNumber || idx}`
+                                                                );
+                                                                if (el) el.click();
+                                                              }}
+                                                              disabled={uploadingId === order._id}
+                                                              style={{
+                                                                background: "#0d6efd",
+                                                                color: "#fff",
+                                                                border: "none",
+                                                                borderRadius: "4px",
+                                                                padding: "2px 8px",
+                                                                fontSize: "0.85em",
+                                                                fontWeight: "600",
+                                                                cursor: "pointer",
+                                                                display: "inline-flex",
+                                                                alignItems: "center",
+                                                                gap: "3px",
+                                                                boxShadow: "0 1px 3px rgba(0,0,0,0.15)",
+                                                              }}
+                                                              title="Tải ảnh thanh toán lên đơn hàng này"
+                                                            >
+                                                              <FaUpload style={{ fontSize: "10px" }} />
+                                                              {uploadingId === order._id ? "Đang tải..." : "Thanh toán"}
+                                                            </button>
+                                                          </div>
                                                         )}
                                                       </td>
                                                     </tr>
