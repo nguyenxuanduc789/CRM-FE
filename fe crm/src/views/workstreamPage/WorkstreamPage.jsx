@@ -23,6 +23,7 @@ import { FaThumbsUp, FaShoppingCart } from "react-icons/fa";
 import Dashboard from "./Dashboard";
 import RishikeshFormsTab from "./RishikeshFormsTab";
 import AffiliateLeadsTable from "../dashboard/AffiliateLeadsTable";
+import AffiliateOrdersTable from "../dashboard/AffiliateOrdersTable";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { getDashboardTranslations } from "./translations";
 
@@ -472,6 +473,9 @@ const WorkstreamPage = () => {
                     </Nav.Item>
                     <Nav.Item>
                       <Nav.Link eventKey="affiliateLeads">Khách hàng Đắc Sư</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link eventKey="affiliateOrders">Đơn mua qua link Aff</Nav.Link>
                     </Nav.Item>
                   </Nav>
 
@@ -1231,6 +1235,12 @@ const WorkstreamPage = () => {
                       <Tab.Pane eventKey="affiliateLeads">
                         <div className="mt-3">
                           <AffiliateLeadsTable />
+                        </div>
+                      </Tab.Pane>
+                      {/* Tab Affiliate Orders */}
+                      <Tab.Pane eventKey="affiliateOrders">
+                        <div className="mt-3">
+                          <AffiliateOrdersTable />
                         </div>
                       </Tab.Pane>
 
