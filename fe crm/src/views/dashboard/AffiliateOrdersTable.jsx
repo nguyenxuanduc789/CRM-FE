@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, Table, Spinner, Badge } from "react-bootstrap";
 import axios from "axios";
+import { API_URL } from "../../config/api";
 
 const fmtNum = (v) => (v || 0).toLocaleString("vi-VN");
 
@@ -11,7 +12,7 @@ const AffiliateOrdersTable = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get("http://localhost:3056/api/v1/affiliate-leads/orders");
+        const response = await axios.get(`${API_URL}/affiliate-leads/orders`);
         if (response.data && response.data.success) {
           setOrders(response.data.orders || []);
         }

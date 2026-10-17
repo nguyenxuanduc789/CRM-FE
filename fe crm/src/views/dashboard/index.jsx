@@ -306,14 +306,18 @@ const DashDefault = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [leadsRes, ordersRes] = await Promise.all([
+        const [leadsRes, ordersRes] = await Promise.allSettled([
           axios.get('https://www.beassess.khitamtherapyintl.com/api/customers'),
           axios.get('https://www.beassess.khitamtherapyintl.com/api/orders?status=PAID'),
         ]);
-        if (leadsRes.data.success) setLeads(leadsRes.data.data || []);
-        if (ordersRes.data.success) setSuccessfulOrders(ordersRes.data.data || []);
-      } catch {
-        setError(t.common?.error || 'Lỗi kết nối đến máy chủ API');
+        if (leadsRes.status === 'fulfilled' && leadsRes.value?.data?.success) {
+          setLeads(leadsRes.value.data.data || []);
+        }
+        if (ordersRes.status === 'fulfilled' && ordersRes.value?.data?.success) {
+          setSuccessfulOrders(ordersRes.value.data.data || []);
+        }
+      } catch (err) {
+        console.warn('Dashboard fetch warning:', err);
       } finally {
         setLoading(false);
       }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, Table, Spinner } from "react-bootstrap";
 import axios from "axios";
+import { API_URL } from "../../config/api";
 
 const AffiliateLeadsTable = () => {
   const [leads, setLeads] = useState([]);
@@ -9,7 +10,7 @@ const AffiliateLeadsTable = () => {
   useEffect(() => {
     const fetchLeads = async () => {
       try {
-        const response = await axios.get("http://localhost:3056/api/v1/affiliate-leads");
+        const response = await axios.get(`${API_URL}/affiliate-leads`);
         console.log("API Response:", response.data);
         if (response.data && response.data.success) {
           // Fallback to array if undefined
